@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import plotly.graph_objects as go
 from textblob import TextBlob
 
 # =========================================================
@@ -22,26 +21,74 @@ if "history" not in st.session_state:
 
 
 # =========================================================
-# HEADER
+# SIMPLE DESIGN
 # =========================================================
 
-st.title("🎬 YouTube Sentiment Analyzer")
+st.markdown("""
+<style>
 
-st.subheader(
-    "AI-powered analysis of YouTube video titles"
-)
+.stApp {
+    background:
+        radial-gradient(circle at 10% 10%, #172554 0%, transparent 30%),
+        radial-gradient(circle at 90% 15%, #3b0764 0%, transparent 30%),
+        linear-gradient(135deg, #050816, #0b1228, #111827);
+}
 
-st.caption(
-    "🧠 Natural Language Processing  •  "
-    "🤖 Sentiment Analysis  •  "
-    "▶️ YouTube"
-)
+.block-container {
+    max-width: 1200px;
+    padding-top: 30px;
+    padding-bottom: 40px;
+}
 
-st.divider()
+/* Main bordered container */
+[data-testid="stVerticalBlockBorderWrapper"] {
+    border-radius: 25px;
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
+/* Buttons */
+.stButton > button {
+    border-radius: 14px;
+    height: 50px;
+    font-weight: 700;
+}
+
+/* Metrics */
+[data-testid="stMetric"] {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px;
+}
+
+textarea {
+    border-radius: 15px !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
 
 
 # =========================================================
-# PROJECT INTRO
+# MAIN HEADER
+# =========================================================
+
+with st.container(border=True):
+
+    st.title("🎬 YouTube Sentiment Analyzer")
+
+    st.subheader(
+        "AI-powered analysis of YouTube video titles"
+    )
+
+    st.write(
+        "🧠 Natural Language Processing   •   "
+        "🤖 Sentiment Analysis   •   "
+        "▶️ YouTube"
+    )
+
+
+# =========================================================
+# HOW IT WORKS
 # =========================================================
 
 st.header("⚡ How It Works")
@@ -49,61 +96,75 @@ st.header("⚡ How It Works")
 step1, step2, step3 = st.columns(3)
 
 with step1:
+
     with st.container(border=True):
+
         st.subheader("1️⃣ Input")
+
         st.write(
             "Enter one or more YouTube video titles."
         )
+
         st.caption(
             "Enter each title on a separate line."
         )
 
+
 with step2:
+
     with st.container(border=True):
+
         st.subheader("2️⃣ NLP Analysis")
+
         st.write(
             "TextBlob analyzes the emotional polarity "
             "of each title."
         )
+
         st.caption(
-            "The score helps determine the sentiment."
+            "The polarity score determines sentiment."
         )
 
+
 with step3:
+
     with st.container(border=True):
+
         st.subheader("3️⃣ Result")
+
         st.write(
             "The system displays Positive, Negative "
             "or Neutral sentiment."
         )
+
         st.caption(
             "Results are shown with scores and charts."
         )
+
 
 st.divider()
 
 
 # =========================================================
-# INPUT SECTION
+# INPUT
 # =========================================================
 
 st.header("🔎 Analyze YouTube Video Titles")
 
 st.write(
-    "Enter one title per line:"
+    "Enter one YouTube title per line:"
 )
 
 titles_text = st.text_area(
     "YouTube Titles",
-    height=180,
+    height=170,
     placeholder=(
         "Example:\n"
         "This movie is absolutely amazing\n"
         "I hate this boring movie\n"
         "New technology trends in 2026\n"
         "I love this beautiful video"
-    ),
-    label_visibility="collapsed"
+    )
 )
 
 
@@ -111,21 +172,24 @@ titles_text = st.text_area(
 # BUTTONS
 # =========================================================
 
-button1, button2, button3 = st.columns(3)
+b1, b2, b3 = st.columns(3)
 
-with button1:
+with b1:
+
     analyze_button = st.button(
         "🚀 Analyze Sentiment",
         use_container_width=True
     )
 
-with button2:
+with b2:
+
     clear_button = st.button(
         "🧹 Clear",
         use_container_width=True
     )
 
-with button3:
+with b3:
+
     history_button = st.button(
         "🕘 View History",
         use_container_width=True
@@ -133,16 +197,18 @@ with button3:
 
 
 # =========================================================
-# CLEAR BUTTON
+# CLEAR
 # =========================================================
 
 if clear_button:
+
     st.session_state.history = []
+
     st.rerun()
 
 
 # =========================================================
-# SENTIMENT FUNCTION
+# ANALYSIS FUNCTION
 # =========================================================
 
 def analyze_title(title):
@@ -150,17 +216,21 @@ def analyze_title(title):
     blob = TextBlob(title)
 
     polarity = blob.sentiment.polarity
+
     subjectivity = blob.sentiment.subjectivity
 
     if polarity > 0:
+
         sentiment = "Positive"
         emoji = "😊"
 
     elif polarity < 0:
+
         sentiment = "Negative"
         emoji = "😞"
 
     else:
+
         sentiment = "Neutral"
         emoji = "😐"
 
@@ -168,7 +238,7 @@ def analyze_title(title):
 
 
 # =========================================================
-# ANALYZE BUTTON
+# ANALYZE
 # =========================================================
 
 if analyze_button:
@@ -182,9 +252,9 @@ if analyze_button:
     else:
 
         titles = [
-            title.strip()
-            for title in titles_text.split("\n")
-            if title.strip()
+            x.strip()
+            for x in titles_text.split("\n")
+            if x.strip()
         ]
 
         results = []
@@ -211,7 +281,7 @@ if analyze_button:
 
 
         # =====================================================
-        # SENTIMENT COUNTS
+        # COUNTS
         # =====================================================
 
         positive_count = int(
@@ -230,60 +300,61 @@ if analyze_button:
 
 
         # =====================================================
-        # RESULTS
+        # OVERVIEW
         # =====================================================
 
         st.divider()
 
         st.header("📊 Sentiment Overview")
 
+        c1, c2, c3, c4 = st.columns(4)
+
+        with c1:
+
+            st.metric(
+                "😊 Positive Titles",
+                positive_count
+            )
+
+        with c2:
+
+            st.metric(
+                "😞 Negative Titles",
+                negative_count
+            )
+
+        with c3:
+
+            st.metric(
+                "😐 Neutral Titles",
+                neutral_count
+            )
+
+        with c4:
+
+            st.metric(
+                "🎬 Total Titles",
+                total_count
+            )
+
 
         # =====================================================
-        # TOP METRIC CARDS
-        # =====================================================
-
-        m1, m2, m3, m4 = st.columns(4)
-
-        with m1:
-            st.metric(
-                label="😊 Positive Titles",
-                value=positive_count
-            )
-
-        with m2:
-            st.metric(
-                label="😞 Negative Titles",
-                value=negative_count
-            )
-
-        with m3:
-            st.metric(
-                label="😐 Neutral Titles",
-                value=neutral_count
-            )
-
-        with m4:
-            st.metric(
-                label="🎬 Total Titles",
-                value=total_count
-            )
-
-
-        # =====================================================
-        # RESULT TABLE
+        # TABLE
         # =====================================================
 
         st.header("📋 Detailed Analysis")
 
         display_df = df.copy()
 
-        display_df["Sentiment"] = display_df[
-            "Sentiment"
-        ].replace({
-            "Positive": "😊 Positive",
-            "Negative": "😞 Negative",
-            "Neutral": "😐 Neutral"
-        })
+        display_df["Sentiment"] = (
+            display_df["Sentiment"].replace(
+                {
+                    "Positive": "😊 Positive",
+                    "Negative": "😞 Negative",
+                    "Neutral": "😐 Neutral"
+                }
+            )
+        )
 
         st.dataframe(
             display_df,
@@ -293,124 +364,85 @@ if analyze_button:
 
 
         # =====================================================
-        # CHART SECTION
+        # DONUT CHART
         # =====================================================
 
         st.header("🍩 Sentiment Distribution")
 
-        chart_left, chart_right = st.columns(2)
-
-
-        # =====================================================
-        # DONUT CHART
-        # =====================================================
-
-        with chart_left:
-
-            labels = [
-                "Positive",
-                "Negative",
-                "Neutral"
-            ]
-
-            values = [
-                positive_count,
-                negative_count,
-                neutral_count
-            ]
-
-            donut = go.Figure(
-                data=[
-                    go.Pie(
-                        labels=labels,
-                        values=values,
-                        hole=0.60,
-                        textinfo="label+percent",
-                        textposition="outside",
-                        marker=dict(
-                            colors=[
-                                "#22c55e",
-                                "#ef4444",
-                                "#f59e0b"
-                            ]
-                        )
-                    )
+        chart_data = pd.DataFrame(
+            {
+                "Sentiment": [
+                    "Positive",
+                    "Negative",
+                    "Neutral"
+                ],
+                "Count": [
+                    positive_count,
+                    negative_count,
+                    neutral_count
                 ]
-            )
+            }
+        )
 
-            donut.update_layout(
-                title={
-                    "text": "Overall Sentiment",
-                    "x": 0.5
+        donut_spec = {
+
+            "mark": {
+                "type": "arc",
+                "innerRadius": 80,
+                "stroke": "#0f172a",
+                "strokeWidth": 3
+            },
+
+            "encoding": {
+
+                "theta": {
+                    "field": "Count",
+                    "type": "quantitative"
                 },
-                height=430,
-                paper_bgcolor="rgba(0,0,0,0)",
-                plot_bgcolor="rgba(0,0,0,0)",
-                font=dict(color="white"),
-                showlegend=True
-            )
 
-            st.plotly_chart(
-                donut,
-                use_container_width=True
-            )
+                "color": {
+                    "field": "Sentiment",
+                    "type": "nominal",
+                    "scale": {
+                        "domain": [
+                            "Positive",
+                            "Negative",
+                            "Neutral"
+                        ],
+                        "range": [
+                            "#22c55e",
+                            "#ef4444",
+                            "#f59e0b"
+                        ]
+                    },
 
-
-        # =====================================================
-        # BAR CHART
-        # =====================================================
-
-        with chart_right:
-
-            bar = go.Figure()
-
-            bar.add_trace(
-                go.Bar(
-                    x=[
-                        "Positive",
-                        "Negative",
-                        "Neutral"
-                    ],
-                    y=[
-                        positive_count,
-                        negative_count,
-                        neutral_count
-                    ],
-                    text=[
-                        positive_count,
-                        negative_count,
-                        neutral_count
-                    ],
-                    textposition="auto",
-                    marker_color=[
-                        "#22c55e",
-                        "#ef4444",
-                        "#f59e0b"
-                    ]
-                )
-            )
-
-            bar.update_layout(
-                title={
-                    "text": "Number of Titles",
-                    "x": 0.5
+                    "legend": {
+                        "orient": "bottom"
+                    }
                 },
-                height=430,
-                paper_bgcolor="rgba(0,0,0,0)",
-                plot_bgcolor="rgba(255,255,255,0.03)",
-                font=dict(color="white"),
-                xaxis_title="Sentiment",
-                yaxis_title="Number of Titles"
-            )
 
-            st.plotly_chart(
-                bar,
-                use_container_width=True
-            )
+                "tooltip": [
+                    {
+                        "field": "Sentiment",
+                        "type": "nominal"
+                    },
+                    {
+                        "field": "Count",
+                        "type": "quantitative"
+                    }
+                ]
+            }
+        }
+
+        st.vega_lite_chart(
+            chart_data,
+            donut_spec,
+            use_container_width=True
+        )
 
 
         # =====================================================
-        # PERCENTAGE SUMMARY
+        # PERCENTAGES
         # =====================================================
 
         st.header("📈 Sentiment Percentages")
@@ -418,15 +450,15 @@ if analyze_button:
         if total_count > 0:
 
             positive_percentage = round(
-                (positive_count / total_count) * 100
+                positive_count / total_count * 100
             )
 
             negative_percentage = round(
-                (negative_count / total_count) * 100
+                negative_count / total_count * 100
             )
 
             neutral_percentage = round(
-                (neutral_count / total_count) * 100
+                neutral_count / total_count * 100
             )
 
         else:
@@ -439,28 +471,39 @@ if analyze_button:
         p1, p2, p3 = st.columns(3)
 
         with p1:
+
             st.write("😊 Positive")
+
             st.progress(
                 positive_percentage / 100
             )
+
             st.caption(
                 f"{positive_percentage}%"
             )
 
+
         with p2:
+
             st.write("😞 Negative")
+
             st.progress(
                 negative_percentage / 100
             )
+
             st.caption(
                 f"{negative_percentage}%"
             )
 
+
         with p3:
+
             st.write("😐 Neutral")
+
             st.progress(
                 neutral_percentage / 100
             )
+
             st.caption(
                 f"{neutral_percentage}%"
             )
@@ -472,14 +515,20 @@ if analyze_button:
 
         st.header("💡 Quick Insight")
 
-        if positive_count >= negative_count and positive_count >= neutral_count:
+        if (
+            positive_count >= negative_count
+            and positive_count >= neutral_count
+        ):
 
             st.success(
                 "😊 Most of the analyzed titles have "
                 "a positive emotional tone."
             )
 
-        elif negative_count >= positive_count and negative_count >= neutral_count:
+        elif (
+            negative_count >= positive_count
+            and negative_count >= neutral_count
+        ):
 
             st.error(
                 "😞 Most of the analyzed titles have "
@@ -505,7 +554,7 @@ if analyze_button:
             if row["Sentiment"] == "Positive":
 
                 st.success(
-                    f"😊 Positive\n\n"
+                    f"😊 **Positive**\n\n"
                     f"**Title:** {row['Title']}\n\n"
                     f"**Polarity Score:** {row['Score']}\n\n"
                     f"**Subjectivity:** {row['Subjectivity']}"
@@ -514,7 +563,7 @@ if analyze_button:
             elif row["Sentiment"] == "Negative":
 
                 st.error(
-                    f"😞 Negative\n\n"
+                    f"😞 **Negative**\n\n"
                     f"**Title:** {row['Title']}\n\n"
                     f"**Polarity Score:** {row['Score']}\n\n"
                     f"**Subjectivity:** {row['Subjectivity']}"
@@ -523,7 +572,7 @@ if analyze_button:
             else:
 
                 st.info(
-                    f"😐 Neutral\n\n"
+                    f"😐 **Neutral**\n\n"
                     f"**Title:** {row['Title']}\n\n"
                     f"**Polarity Score:** {row['Score']}\n\n"
                     f"**Subjectivity:** {row['Subjectivity']}"
@@ -531,7 +580,7 @@ if analyze_button:
 
 
         # =====================================================
-        # DOWNLOAD
+        # DOWNLOAD REPORT
         # =====================================================
 
         st.header("⬇️ Download Report")
@@ -571,13 +620,15 @@ if history_button:
             st.session_state.history
         )
 
-        history_df["Sentiment"] = history_df[
-            "Sentiment"
-        ].replace({
-            "Positive": "😊 Positive",
-            "Negative": "😞 Negative",
-            "Neutral": "😐 Neutral"
-        })
+        history_df["Sentiment"] = (
+            history_df["Sentiment"].replace(
+                {
+                    "Positive": "😊 Positive",
+                    "Negative": "😞 Negative",
+                    "Neutral": "😐 Neutral"
+                }
+            )
+        )
 
         st.dataframe(
             history_df,
@@ -594,24 +645,33 @@ st.divider()
 
 st.header("🧠 Project Information")
 
-info1, info2, info3 = st.columns(3)
+i1, i2, i3 = st.columns(3)
 
-with info1:
+with i1:
+
     st.subheader("🐍 Python")
+
     st.write(
-        "Used as the main programming language."
+        "Main programming language used "
+        "for the project."
     )
 
-with info2:
+with i2:
+
     st.subheader("🌐 Streamlit")
+
     st.write(
-        "Used to build the web application interface."
+        "Used to create the interactive "
+        "web application."
     )
 
-with info3:
+with i3:
+
     st.subheader("🧠 TextBlob")
+
     st.write(
-        "Used for sentiment and polarity analysis."
+        "Used to calculate sentiment "
+        "and polarity."
     )
 
 
@@ -626,7 +686,7 @@ st.caption(
 )
 
 st.caption(
-    "Python • Streamlit • TextBlob • Pandas • Plotly"
+    "Python • Streamlit • TextBlob • Pandas"
 )
 
 st.caption(
